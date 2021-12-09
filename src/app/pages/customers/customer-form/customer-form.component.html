@@ -1,0 +1,89 @@
+<nav class="mb-5">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/customers">Clientes</a></li>
+        <li class="breadcrumb-item active">{{pageTitle}}</li>
+    </ol>
+</nav>
+
+<div class="row mb-4">
+    <div class="col-md">
+        <h1 class="h2">{{pageTitle}}</h1>
+    </div>
+    <div class="col-md">
+        <a routerLink="/customers" class="btn btn-secondary float-right"><< Voltar</a>
+    </div>
+</div>
+
+<form [formGroup]="customerForm" (submit)="submitForm()">
+    <div class="card">
+        <div class="card-header">
+            Informações
+        </div>
+        <div class="card-body">
+
+            <input type="hidden" class="form-control" id="clientId" formControlName="clienteId">
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+
+                    <label for="name">Nome</label>
+                    <input type="text" class="form-control" id="name" formControlName="nome">
+
+                    <div class="text-danger" *ngIf="customerForm.get('nome').invalid && customerForm.get('nome').touched">
+                        <div *ngIf="customerForm.get('nome').errors.required">campo obrigatório</div>
+                        <div *ngIf="customerForm.get('nome').errors.minlength">campo deve ter no mínimo 2 caracteres</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+
+                    <label for="birthDate">Nascimento</label>
+                    <input type="date" class="form-control" id="birthDate" formControlName="nascimento" value="{{ customer.nascimento | date:'yyyy-MM-dd' }}">
+
+                    <div class="text-danger" *ngIf="customerForm.get('nascimento').invalid && customerForm.get('nascimento').touched">
+                        <div *ngIf="customerForm.get('nascimento').errors.required">campo obrigatório</div>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-4">
+
+                    <label for="gender">Sexo</label>
+                    <select name="gender" id="gender" formControlName="sexo" class="form-control">
+                        <option *ngFor="let option of genderTypes" [value]="+option.value">{{option.text}}</option>
+                    </select>
+
+                    <div class="text-danger" *ngIf="customerForm.get('sexo').invalid && customerForm.get('sexo').touched">
+                        <div *ngIf="customerForm.get('sexo').errors.required">campo obrigatório</div>
+                    </div>
+
+                </div>
+                <div class="form-group col-md-4">
+
+                    <label for="civilStatus">Estado civil</label>
+                    <select name="civilStatus" id="civilStatus" formControlName="estadoCivil" class="form-control">
+                        <option *ngFor="let option of civilStatusTypes" [value]="+option.value">{{option.text}}</option>
+
+                    </select>
+
+                    <div class="text-danger" *ngIf="customerForm.get('estadoCivil').invalid && customerForm.get('estadoCivil').touched">
+                        <div *ngIf="customerForm.get('estadoCivil').errors.required">campo obrigatório</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-danger mt-4" *ngIf="serverErrorMessages">
+        <strong>Erro no servidor:</strong>
+        <ul>
+            <li *ngFor="let error of serverErrorMessages">{{error}}</li>
+        </ul>
+    </div>
+
+    <button [disabled]="submittingForm || customerForm.invalid" type="submit" class="btn btn-primary float-right mt-3">Salvar</button>
+</form>
